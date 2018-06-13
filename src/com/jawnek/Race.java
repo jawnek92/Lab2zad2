@@ -1,5 +1,6 @@
 package com.jawnek;
 
+import java.io.*;
 import java.util.*;
 
 
@@ -14,71 +15,53 @@ public class Race extends Thread {
     public Race(int limitOfBikers) {
         this.bikersLimit = limitOfBikers;
         this.names = new String[15];
-        names[0] = "Grzeda";
-        names[1] = "Wnek";
-        names[2] = "Wolanski";
-        names[3] = "Groszek";
-        names[4] = "Siwiec";
-        names[5] = "Barucha";
-        names[6] = "Kowal";
-        names[7] = "Kowalski";
-        names[8] = "Shwartz";
-        names[9] = "Nowak";
-        names[10] = "Grzesiuk";
-        names[11] = "Holbowski";
-        names[12] = "Krychowicz";
-        names[13] = "Kalakan";
-        names[14] = "Smith";
-
+        try(BufferedReader reader = new BufferedReader(new FileReader("nazwiska.txt"))){
+            String line = reader.readLine();
+            this.names = line.split(",");
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void printFirstThreeBikers(){
-        for(int i = 0; i<this.bikers.size()-1; i++){
+        for(int i = 0; i<this.bikers.size(); i++){
             if(i>=3)
                 break;
-            System.out.println(this.bikers.get(i).toString());
+            System.out.println((i+1)+". "+this.bikers.get(i).toString());
         }
     }
 
     public void printBikers(){
-        for(int i = 0; i<this.bikers.size()-1; i++){
-            System.out.println(this.bikers.get(i).toString());
+        for(int i = 0; i<this.bikers.size(); i++){
+            System.out.println((i+1)+". "+this.bikers.get(i).toString());
         }
     }
 
 
     @Override
     public synchronized void run() {
-        while(counter<bikersLimit) {
 
-            Biker biker = new Biker(names[counter]);
-            counter++;
-            biker.start();
-            this.bikers.add(biker);
+        Biker biker = new Biker(names[counter]);
+        counter++;
+        biker.start();
+        this.bikers.add(biker);
 
 
-            try{
-                //biker.join();
-                Thread.currentThread().sleep(1000);
-            }catch (InterruptedException e){
-                e.printStackTrace();
+        Collections.sort(this.bikers, (o1, o2) -> {
+            if(o1.getTime()>o2.getTime()){
+                return 1;
+            }else if(o1.getTime()==o2.getTime()){
+                return 0;
+            }else{
+                return -1;
             }
-
-            Collections.sort(this.bikers, (o1, o2) -> {
-                if(o1.getTime()>o2.getTime()){
-                    return 1;
-                }else if(o1.getTime()==o2.getTime()){
-                    return 0;
-                }else{
-                    return -1;
-                }
-            });
-            if(counter==bikersLimit){
-                printBikers();
-            }else {
-                printFirstThreeBikers();
-            }
-            System.out.println("====================================================");
-        }
+        });
+        if(counter==bikersLimit){
+            printBikers();
+        }else
+            printFirstThreeBikers();
+        System.out.println("====================================================");
     }
 }

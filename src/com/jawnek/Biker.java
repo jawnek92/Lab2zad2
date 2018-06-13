@@ -21,7 +21,7 @@ public class Biker extends Thread {
     @Override
     public String toString() {
         return "Biker: " +
-                "name: " + name + '\'' +
+                "name: " + name +
                 ", time: " + time;
     }
 
