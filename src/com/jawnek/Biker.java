@@ -20,8 +20,7 @@ public class Biker extends Thread {
 
     @Override
     public String toString() {
-        return "Biker: " +
-                "name: " + name +
+        return  "name: " + name +
                 ", time: " + time;
     }
 
