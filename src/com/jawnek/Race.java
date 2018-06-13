@@ -1,24 +1,14 @@
 package com.jawnek;
 
 import java.util.*;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 public class Race extends Thread {
-    public static void main(String[] args) {
-
-        Race race = new Race(15);
-        race.start();
-
-    }
 
     private List<Biker> bikers = new ArrayList<>();
     private final int bikersLimit;
     private static int counter = 0;
     private String[] names;
-    ScheduledExecutorService scheduledExecutorService;
 
 
     public Race(int limitOfBikers) {
@@ -40,7 +30,6 @@ public class Race extends Thread {
         names[13] = "Kalakan";
         names[14] = "Smith";
 
-        this.scheduledExecutorService = new ScheduledThreadPoolExecutor(1);
     }
 
     public void printFirstThreeBikers(){
@@ -65,10 +54,9 @@ public class Race extends Thread {
             Biker biker = new Biker(names[counter]);
             counter++;
             biker.start();
-            scheduledExecutorService.scheduleWithFixedDelay(biker, 0, 10, TimeUnit.SECONDS);
             this.bikers.add(biker);
 
-            System.out.println("====================================================");
+
             try{
                 //biker.join();
                 Thread.currentThread().sleep(1000);
@@ -90,9 +78,7 @@ public class Race extends Thread {
             }else {
                 printFirstThreeBikers();
             }
+            System.out.println("====================================================");
         }
-
-        scheduledExecutorService.shutdown();
-
     }
 }

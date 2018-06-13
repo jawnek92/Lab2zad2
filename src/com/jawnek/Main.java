@@ -15,15 +15,25 @@ import java.util.concurrent.*;
 
 public class Main {
 
+    private  final static ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     public static void main(String[] args) throws Exception {
-        // write your code here
+        startRace();
+    }
 
-
-//        Race race = new Race(15);
-//        final ScheduledFuture<?> raceHandler = scheduler.scheduleAtFixedRate(race, 0, 15, TimeUnit.SECONDS);
-//        scheduler.shutdown();
-
-
+    private static void startRace(){
+        Race race = new Race(15);
+        final ScheduledFuture<?> raceHandle = executor.scheduleAtFixedRate(race, 1, 15, TimeUnit.SECONDS);
+        executor.schedule(new Runnable() {
+            @Override
+            public void run() {
+                if(!raceHandle.isCancelled()) {
+                    raceHandle.cancel(true);
+                }
+                if(!executor.isShutdown()){
+                    executor.shutdown();
+                }
+            }
+        }, 15, TimeUnit.SECONDS);
     }
 }
 
