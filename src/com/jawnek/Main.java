@@ -12,15 +12,12 @@ public class Main {
     private static void startRace(){
         Race race = new Race(15);
         final ScheduledFuture<?> raceHandle = executor.scheduleAtFixedRate(race, 0, 2, TimeUnit.SECONDS);
-        executor.schedule(new Runnable() {
-            @Override
-            public void run() {
-                if(!raceHandle.isCancelled()) {
-                    raceHandle.cancel(true);
-                }
-                if(!executor.isShutdown()){
-                    executor.shutdown();
-                }
+        executor.schedule(() -> {
+            if(!raceHandle.isCancelled()) {
+                raceHandle.cancel(true);
+            }
+            if(!executor.isShutdown()){
+                executor.shutdown();
             }
         }, 30, TimeUnit.SECONDS);
     }

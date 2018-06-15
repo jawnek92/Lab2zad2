@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class Race extends Thread {
+public class Race implements Runnable {
 
     private List<Biker> bikers = new ArrayList<>();
     private final int bikersLimit;
@@ -41,7 +41,7 @@ public class Race extends Thread {
 
 
     @Override
-    public synchronized void run() {
+    public void run() {
 
         Biker biker = new Biker(names[counter]);
         counter++;
